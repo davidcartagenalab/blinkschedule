@@ -1,0 +1,143 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #ffffff;
+}
+
+.container {
+  display: flex;
+  flex-wrap: nowrap;
+  flex-direction: row;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 2rem;
+  gap: 2rem;
+}
+
+.left-panel,
+.right-panel {
+  flex: 1 1 50%;
+  min-width: 300px;
+}
+
+.left-panel h2 {
+  font-size: 1.6rem;
+  margin-bottom: 0.5rem;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.input-row {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.input-row input {
+  flex: 1;
+  padding: 0.8rem;
+  font-size: 1rem;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+
+.input-row button {
+  padding: 0.8rem 1rem;
+  background-color: #f39200;
+  color: white;
+  font-size: 1rem;
+  border: none;
+  border-radius: 0.4em;
+  cursor: pointer;
+}
+
+.input-row button:hover {
+  background-color: #d77f00;
+}
+
+.result {
+  display: none;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+  padding: 1.2rem;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  background-color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+  white-space: pre-line;
+  line-height: 1.8;
+  font-size: 1.1rem;
+}
+
+.result.show {
+  display: block;
+  opacity: 1;
+}
+
+.right-panel img {
+  width: 80%;
+  max-width: 40em;
+  height: auto;
+  border-radius: 12px;
+}
+
+@media (max-width: 768px) {
+  .container {
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem;
+    gap: 1.5rem;
+  }
+
+  .left-panel,
+  .right-panel {
+    flex: none;
+    width: 100%;
+    max-width: 500px;
+  }
+
+  .left-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .input-row input,
+  .input-row button {
+    width: 100%;
+  }
+
+  .right-panel {
+    display: flex;
+    justify-content: center;
+    padding-bottom: 1.5rem;
+  }
+
+  .right-panel img {
+    width: 100%;
+    max-width: 360px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+  }
+
+  .result {
+    font-size: 1rem;
+    padding: 1rem;
+  }
+}

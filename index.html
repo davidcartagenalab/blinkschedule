@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Consulta tu horario</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <div class="left-panel">
+      <h2>Check your schedule</h2>
+      
+      <div class="form-wrapper">
+        <form id="formulario" onsubmit="consultarHorario(); return false;">
+          <div class="input-row">
+            <input type="email" id="email" placeholder="Write your email here" />
+            <button type="submit">Check</button>
+          </div>
+        </form>
+        <div class="result" id="resultado"></div>
+      </div>
+    </div>
+
+    <div class="right-panel">
+      <img src="mapa.jpg" alt="Mapa Barrio Blink" />
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
