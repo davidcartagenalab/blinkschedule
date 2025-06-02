@@ -1,31 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Consulta tu horario</title>
+  <title>Horarios Estudiantiles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
-<body>
-  <div class="container">
-    <div class="left-panel">
-      <h2>Check your schedule</h2>
-      
-      <div class="form-wrapper">
-        <form id="formulario" onsubmit="consultarHorario(); return false;">
-          <div class="input-row">
-            <input type="email" id="email" placeholder="Write your email here" />
-            <button type="submit">Check</button>
-          </div>
-        </form>
-        <div class="result" id="resultado"></div>
-      </div>
-    </div>
 
-    <div class="right-panel">
-      <img src="mapa.jpg" alt="Mapa Barrio Blink" />
+<body>
+  <h1>Check your schedule</h1>
+  <div class="page-wrapper">
+    <div class="main-layout">
+
+      <div class="left-column">
+        <header class="top-header">
+          <form class="email-form">
+            <input type="email" placeholder="Write your email here">
+            <button type="submit">Check</button>
+            <div class="loader hidden"></div>
+          </form>
+        </header>
+
+        <section class="info-box hidden">
+          <h2>Group Classes</h2>
+          <hr>
+          <p><strong>Name:</strong> <span class="group-name"></span></p>
+          <p><strong>Level:</strong> <span class="group-level"></span></p>
+          <p><strong>Group:</strong> <span class="group-group"></span></p>
+          <p><strong>Schedule:</strong> <span class="group-schedule"></span></p>
+          <p><strong>Location:</strong> <span class="group-location"></span></p>
+          <p><strong>Professor:</strong> <span class="group-teacher"></span></p>
+          <button class="map-btn" style="display: none;">View Map</button>
+
+          <!-- NUEVO: contenedor del mapa -->
+          <div class="group-map hidden">
+            <img src="" alt="Group map" id="group-map-img" style="max-width: 100%; margin-top: 1rem;" />
+          </div>
+        </section>
+
+        <section class="info-box hidden">
+          <h2>Private Classes</h2>
+          <hr>
+          <div class="private-classes-container">
+            <!-- Aquí se insertarán los bloques de clases privadas -->
+          </div>
+        </section>
+      </div>
+
+      <div class="right-column">
+        <div class="grid-container">
+          <div class="cell reloj"><img src="reloj.png" alt="Reloj"></div>
+          <div class="cell header-day">Monday</div>
+          <div class="cell header-day">Tuesday</div>
+          <div class="cell header-day">Wednesday</div>
+          <div class="cell header-day">Thursday</div>
+          <div class="cell header-day">Friday</div>
+
+          <script>
+            const container = document.currentScript.parentElement;
+            const horas = [
+              '7:00 a.m.', '8:00 a.m.', '9:00 a.m.', '10:00 a.m.', '11:00 a.m.', '12:00 p.m.',
+              '1:00 p.m.', '2:00 p.m.', '3:00 p.m.', '4:00 p.m.', '5:00 p.m.', '6:00 p.m.', '7:00 p.m.'
+            ];
+
+            for (let i = 0; i < horas.length; i++) {
+              container.innerHTML += `
+                <div class="cell header-time">${horas[i]}</div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>`;
+            }
+          </script>
+        </div>
+
+        <div class="legend">
+          <span>
+            <div class="dot group"></div>Group class
+          </span>
+          <span>
+            <div class="dot private"></div>Private class
+          </span>
+        </div>
+      </div>
+
     </div>
   </div>
   <script src="script.js"></script>
 </body>
+
 </html>
