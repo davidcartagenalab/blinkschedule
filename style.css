@@ -130,7 +130,7 @@ h1 {
 
 .grid-container {
   display: grid;
-  grid-template-columns: 70px repeat(5, 56px);
+  grid-template-columns: 80px repeat(5, 40px);
   grid-template-rows: 80px repeat(13, 40px);
   gap: 4px;
   background: white;
