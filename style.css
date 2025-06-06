@@ -396,24 +396,32 @@ h1 {
   }
 }
 
-/* Mejoras móviles y ajustes generales */
-body {
+/* Evita scroll interno global */
+html, body {
+  overflow: hidden;
   padding-bottom: 2rem;
 }
 
+/* Ajusta campos de formulario para móviles y evita zoom */
 input[type="email"],
 button {
   font-size: 16px;
 }
 
+/* Aumenta legibilidad en móviles */
 @media (max-width: 480px) {
   .grid-container {
     min-height: 400px;
+    overflow: hidden;
   }
 
   .cell,
   .cell.header-day,
   .cell.header-time {
     font-size: 0.75rem;
+  }
+
+  .main-layout {
+    padding-bottom: 2rem;
   }
 }
