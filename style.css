@@ -126,6 +126,11 @@ h1 {
   box-shadow: var(--box-shadow);
   width: 100%;
   max-width: 600px;
+
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  white-space: normal;
 }
 
 .grid-container {
@@ -282,7 +287,7 @@ h1 {
     margin: 0 auto;
   }
 
-    .top-header {
+  .top-header {
     padding:0;
   }
 
@@ -388,5 +393,27 @@ h1 {
   .legend {
     justify-content: center;
     gap: 1.5rem;
+  }
+}
+
+/* Mejoras móviles y ajustes generales */
+body {
+  padding-bottom: 2rem;
+}
+
+input[type="email"],
+button {
+  font-size: 16px;
+}
+
+@media (max-width: 480px) {
+  .grid-container {
+    min-height: 400px;
+  }
+
+  .cell,
+  .cell.header-day,
+  .cell.header-time {
+    font-size: 0.75rem;
   }
 }
