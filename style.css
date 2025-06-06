@@ -398,7 +398,8 @@ h1 {
 
 /* Evita scroll interno global */
 html, body {
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: auto;
   padding-bottom: 2rem;
 }
 
