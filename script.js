@@ -8,12 +8,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const SCRIPT_URL = "https://backendblinkschedule.onrender.com/proxy";
 
-  const hourMap = {
-    "7": 1, "8": 2, "9": 3, "10": 4, "11": 5, "12": 6,
-    "13": 7, "14": 8, "15": 9, "16": 10, "17": 11,
-    "18": 12, "19": 13
-  };
-
+  let hourMap = {};
   const dayMap = {
     "Monday": 1,
     "Tuesday": 2,
@@ -85,9 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const container = document.querySelector(".private-classes-container");
         const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-        const sorted = data.privateClasses.sort(
-          (a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day)
-        );
+        const sorted = data.privateClasses.sort((a, b) => dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day));
 
         sorted.forEach(cls => {
           const slot = document.createElement("div");
@@ -102,8 +95,21 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
+      const allTimes = (data.groupGrid || []).concat(data.privateGrid || []);
+      const timeKeys = [...new Set(allTimes.map(c => `${c.hour}:${c.minute}`))].sort((a, b) => {
+        const [ha, ma] = a.split(":").map(Number);
+        const [hb, mb] = b.split(":").map(Number);
+        return ha !== hb ? ha - hb : ma - mb;
+      });
+
+      hourMap = timeKeys.reduce((acc, key, i) => {
+        acc[key] = i + 1;
+        return acc;
+      }, {});
+
       function paintCell(day, hour, minute, color, label = "") {
-        const row = hourMap[hour];
+        const key = `${hour}:${minute}`;
+        const row = hourMap[key];
         const col = dayMap[day];
         if (!row || !col) return;
 
@@ -128,34 +134,17 @@ document.addEventListener("DOMContentLoaded", () => {
         });
       }
 
-      function actualizarHorasVisibles(data) {
+      function actualizarHorasVisibles() {
         const headers = document.querySelectorAll(".cell.header-time");
-        const minutosPorHora = {};
-        function recolectarMinutos(arr) {
-          arr.forEach(cls => {
-            if (!minutosPorHora[cls.hour]) minutosPorHora[cls.hour] = [];
-            minutosPorHora[cls.hour].push(cls.minute);
-          });
-        }
-
-        if (data.privateGrid) recolectarMinutos(data.privateGrid);
-        if (data.groupGrid) recolectarMinutos(data.groupGrid);
-
-        let lastMinute = 0;
-
-        headers.forEach((cell, i) => {
-          const hora = 7 + i;
-          if (minutosPorHora[hora] && minutosPorHora[hora].length > 0) {
-            lastMinute = Math.min(...minutosPorHora[hora]);
-          }
-          const displayHour = hora > 12 ? hora - 12 : hora;
-          const suffix = hora < 12 ? "a.m." : "p.m.";
-          const minuteStr = lastMinute.toString().padStart(2, "0");
-          cell.textContent = `${displayHour}:${minuteStr} ${suffix}`;
+        timeKeys.forEach((key, i) => {
+          const [h, m] = key.split(":").map(Number);
+          const hour12 = h % 12 || 12;
+          const suffix = h < 12 ? "a.m." : "p.m.";
+          headers[i].textContent = `${hour12}:${m.toString().padStart(2, "0")} ${suffix}`;
         });
       }
 
-      actualizarHorasVisibles(data);
+      actualizarHorasVisibles();
       document.querySelector(".grid-container").classList.add("fade-in");
 
     } catch (error) {
@@ -165,7 +154,6 @@ document.addEventListener("DOMContentLoaded", () => {
       loader.classList.add("hidden");
     }
 
-    // ✅ NUEVO: activar todos los botones "View Map" con toggle
     document.querySelectorAll(".map-btn").forEach(btn => {
       btn.addEventListener("click", () => {
         const container = btn.closest(".info-box, .private-slot");
