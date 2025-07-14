@@ -96,11 +96,22 @@ document.addEventListener("DOMContentLoaded", () => {
       }
 
       const allTimes = (data.groupGrid || []).concat(data.privateGrid || []);
-      const timeKeys = [...new Set(allTimes.map(c => `${c.hour}:${c.minute}`))].sort((a, b) => {
-        const [ha, ma] = a.split(":").map(Number);
-        const [hb, mb] = b.split(":").map(Number);
-        return ha !== hb ? ha - hb : ma - mb;
-      });
+const timeKeysSet = new Set();
+
+allTimes.forEach(c => {
+  const hour = parseInt(c.hour, 10);
+  const minute = parseInt(c.minute, 10);
+  if (!isNaN(hour) && !isNaN(minute)) {
+    timeKeysSet.add(`${hour}:${minute}`);
+  }
+});
+
+const timeKeys = Array.from(timeKeysSet).sort((a, b) => {
+  const [ha, ma] = a.split(":").map(Number);
+  const [hb, mb] = b.split(":").map(Number);
+  return ha !== hb ? ha - hb : ma - mb;
+});
+
 
       hourMap = timeKeys.reduce((acc, key, i) => {
         acc[key] = i + 1;
