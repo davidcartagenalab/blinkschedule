@@ -1,196 +1,169 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const layout = document.querySelector(".main-layout");
+  if (!layout) return;
 
-  document.addEventListener("DOMContentLoaded", () => {
-    const layout = document.querySelector(".main-layout");
-    if (!layout) return;
+  const form = layout.querySelector(".email-form");
+  if (!form) return;
 
-    const form = layout.querySelector(".email-form");
-    if (!form) return;
+  const input = form.querySelector("input[type='email']");
+  const groupBox = layout.querySelectorAll(".info-box")[0];
+  const privateBox = layout.querySelectorAll(".info-box")[1];
+  const masterBox = layout.querySelectorAll(".info-box")[2]; // NEW
+  const cells = layout.querySelectorAll(".grid-container .cell");
+  const loader = form.querySelector(".loader");
 
-    const input = form.querySelector("input[type='email']");
-    const groupBox = layout.querySelectorAll(".info-box")[0];
-    const privateBox = layout.querySelectorAll(".info-box")[1];
-    const cells = layout.querySelectorAll(".grid-container .cell");
-    const loader = form.querySelector(".loader");
+  const SCRIPT_URL =
+    "https://script.google.com/macros/s/AKfycbwiedPjznWict_f6JW4PDV-YCC71p7d9ypjcf9thN4N4jvxaPB5jonHM1Qw6QIgL7fLOQ/exec";
+  const hourMap = {
+    "7": 1,
+    "8": 2,
+    "9": 3,
+    "10": 4,
+    "11": 5,
+    "12": 6,
+    "13": 7,
+    "14": 8,
+    "15": 9,
+    "16": 10,
+    "17": 11,
+    "18": 12,
+    "19": 13,
+  };
+  const dayMap = {
+    Monday: 1,
+    Tuesday: 2,
+    Wednesday: 3,
+    Thursday: 4,
+    Friday: 5,
+  };
 
-    const SCRIPT_URL = "https://backendblinkschedule.onrender.com/proxy";
-    const hourMap = { "7": 1, "8": 2, "9": 3, "10": 4, "11": 5, "12": 6, "13": 7, "14": 8, "15": 9, "16": 10, "17": 11, "18": 12, "19": 13 };
-    const dayMap = { "Monday": 1, "Tuesday": 2, "Wednesday": 3, "Thursday": 4, "Friday": 5 };
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const email = input.value.trim().toLowerCase();
+    if (!email) return alert("Please enter your email.");
 
-    function formatTime(hour, minute) {
-      const date = new Date(2000, 0, 1, hour, minute);
-      return date.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit"
+    loader.classList.remove("hidden");
+
+    try {
+      // Fetch with Post
+      const response = await fetch(SCRIPT_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email })
       });
-    }
+      const data = await response.json();
 
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-      const email = input.value.trim().toLowerCase();
-      if (!email) return alert("Please enter your email.");
 
-      loader.classList.remove("hidden");
+      if (data.error)
+        return alert(
+          "We couldn't find your schedule. Please make sure the email is correct."
+        );
 
-      try {
-        const response = await fetch(SCRIPT_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: `email=${encodeURIComponent(email)}`
-        });
+      // Reset sections
+      groupBox.classList.add("hidden");
+      privateBox.classList.add("hidden");
+      masterBox.classList.add("hidden");
 
-        const text = await response.text();
-        const data = JSON.parse(text);
-        if (data.error) return alert("We couldn't find your schedule. Please make sure the email is correct. If you continue having this problem, contact Blink Spanish.");
-        const headerTimes = document.querySelectorAll(".cell.header-time");
+      layout.querySelector(".private-classes-container").innerHTML = "";
+      layout.querySelector(".master-classes-container").innerHTML = "";
 
-        headerTimes.forEach((cell) => {
-          const baseHour = parseInt(cell.getAttribute("data-hour"));
-          const groupClass = data.groupGrid?.find(c => parseInt(c.hour) === baseHour);
-          const privateClass = data.privateGrid?.find(c => parseInt(c.hour) === baseHour);
-          const classInfo = groupClass || privateClass;
-
-          if (classInfo) {
-            const hour = parseInt(classInfo.hour);
-            const minute = parseInt(classInfo.minute);
-            const date = new Date(2000, 0, 1, hour, minute);
-            const timeFormatted = date.toLocaleTimeString("en-US", { hour: 'numeric', minute: '2-digit' });
-            cell.textContent = timeFormatted;
-            cell.title = timeFormatted;
-          }
-        });
-
-        groupBox.classList.add("hidden");
-        privateBox.classList.add("hidden");
-        groupBox.classList.remove("fade-in");
-        privateBox.classList.remove("fade-in");
-        layout.querySelector(".grid-container").classList.remove("fade-in");
-
-        layout.querySelector(".group-name").innerHTML = "";
-        layout.querySelector(".group-level").innerHTML = "";
-        layout.querySelector(".group-group").innerHTML = "";
-        layout.querySelector(".group-schedule").innerHTML = "";
-        layout.querySelector(".group-location").innerHTML = "";
-        layout.querySelector(".group-teacher").innerHTML = "";
-        layout.querySelector(".map-btn").style.display = "none";
-        layout.querySelector(".private-classes-container").innerHTML = "";
-
-        cells.forEach(cell => {
-          if (!cell.classList.contains("header-day") && !cell.classList.contains("header-time") && !cell.classList.contains("reloj")) {
-            cell.style.backgroundColor = "";
-            cell.textContent = "";
-            cell.title = "";
-          }
-        });
-
-        if (data.groupClass) {
-          groupBox.classList.remove("hidden");
-          groupBox.classList.add("fade-in");
-          layout.querySelector(".group-name").innerHTML = `<span class="label">Name:</span> <span class="value">${data.groupClass.name}</span>`;
-          layout.querySelector(".group-level").innerHTML = `<span class="label">Level:</span> <span class="value">${data.groupClass.level}</span>`;
-          layout.querySelector(".group-group").innerHTML = `<span class="label">Group:</span> <span class="value">${data.groupClass.group}</span>`;
-          layout.querySelector(".group-schedule").innerHTML = `<span class="label">Schedule:</span> <span class="value">${data.groupClass.horario}</span>`;
-          layout.querySelector(".group-location").innerHTML = `<span class="label">Location:</span> <span class="value">${data.groupClass.lugar}</span>`;
-          layout.querySelector(".group-teacher").innerHTML = `<span class="label">Professor:</span> <span class="value">${data.groupClass.teacher}</span>`;
-          layout.querySelector(".map-btn").style.display = "inline-block";
+      // Clear grid
+      cells.forEach((cell) => {
+        if (
+          !cell.classList.contains("header-day") &&
+          !cell.classList.contains("header-time") &&
+          !cell.classList.contains("reloj")
+        ) {
+          cell.style.backgroundColor = "";
+          cell.textContent = "";
+          cell.title = "";
         }
+      });
+
+      // --- GROUP CLASSES ---
+      if (data.groupClasses) {
+        groupBox.classList.remove("hidden");
+        groupBox.classList.add("fade-in");
+
+        // Just show general info (using first class of Monday if exists)
+        const mondayClasses = data.groupClasses.monday || [];
+        if (mondayClasses.length > 0) {
+          const c = mondayClasses[0];
+          layout.querySelector(".group-name").textContent = data.name;
+          layout.querySelector(".group-level").textContent = data.level;
+          layout.querySelector(".group-group").textContent = data.group;
+          layout.querySelector(".group-schedule").textContent = data.schedule;
+          layout.querySelector(".group-location").textContent = c.room;
+          layout.querySelector(".group-teacher").textContent = c.teacher;
+        }
+      }
+
+      // --- PRIVATE CLASSES ---
+      if (data.privateClasses) {
+        privateBox.classList.remove("hidden");
+        privateBox.classList.add("fade-in");
 
         const container = layout.querySelector(".private-classes-container");
-        const dayOrder = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
-
-        if (data.privateClasses && data.privateClasses.length > 0) {
-          privateBox.classList.remove("hidden");
-          privateBox.classList.add("fade-in");
-
-          const sorted = data.privateClasses.sort((a, b) => {
-            const dayDiff = dayOrder.indexOf(a.day) - dayOrder.indexOf(b.day);
-            if (dayDiff !== 0) return dayDiff;
-
-            // Ordenar por hora dentro del mismo día
-            const [aHour, aMin] = a.time.split(":").map(t => parseInt(t));
-            const [bHour, bMin] = b.time.split(":").map(t => parseInt(t));
-
-            return aHour !== bHour ? aHour - bHour : aMin - bMin;
-          });
-
-          sorted.forEach(cls => {
+        Object.keys(data.privateClasses).forEach((day) => {
+          data.privateClasses[day].forEach((cls) => {
             const slot = document.createElement("div");
             slot.classList.add("private-slot");
             slot.innerHTML = `
-            <p><span class="label">Day and time:</span> <span class="value">${cls.day}, ${cls.time}</span></p>
-            <p><span class="label">Location:</span> <span class="value">${cls.room}</span></p>
-            <p><span class="label">Professor:</span> <span class="value">${cls.teacher}</span></p>
-            <button class="map-btn">View Map</button>
-          `;
+              <p><span class="label">Day and time:</span> ${day}, ${cls.startHour} - ${cls.endHour}</p>
+              <p><span class="label">Location:</span> ${cls.room}</p>
+              <p><span class="label">Professor:</span> ${cls.teacher}</p>
+            `;
             container.appendChild(slot);
           });
-        }
+        });
+      }
 
-        function getMapFromLocation(locationText) {
-          const location = locationText.toLowerCase();
-          if (location.includes("building 1")) {
-            return "<?php echo get_stylesheet_directory_uri(); ?>/schedule/mapa1.jpg";
-          } else if (location.includes("building 2")) {
-            return "<?php echo get_stylesheet_directory_uri(); ?>/schedule/mapa2.jpg";
-          } else if (location.includes("building 3")) {
-            return "<?php echo get_stylesheet_directory_uri(); ?>/schedule/mapa3.jpg";
-          }
-          return "";
-        }
+      // --- MASTER CLASSES ---
+      if (data.masterClasses) {
+        masterBox.classList.remove("hidden");
+        masterBox.classList.add("fade-in");
 
-        const groupMapBtn = layout.querySelector(".map-btn");
-        const groupMapContainer = layout.querySelector(".group-map");
-        const groupMapImg = document.getElementById("group-map-img");
-        if (groupMapBtn && data.groupClass) {
-          groupMapBtn.addEventListener("click", () => {
-            const mapSrc = getMapFromLocation(data.groupClass.lugar);
-            groupMapImg.src = mapSrc;
-            groupMapContainer.classList.toggle("hidden");
-          });
-        }
-
-        const privateSlots = layout.querySelectorAll(".private-slot");
-        privateSlots.forEach(slot => {
-          const btn = slot.querySelector(".map-btn");
-          const locationText = slot.querySelectorAll(".value")[1].innerText;
-          let img = slot.querySelector("img");
-
-          if (!img) {
-            img = document.createElement("img");
-            img.style.maxWidth = "100%";
-            img.style.marginTop = "1rem";
-            img.classList.add("hidden");
-            slot.appendChild(img);
-          }
-
-          btn.addEventListener("click", () => {
-            img.src = getMapFromLocation(locationText);
-            img.classList.toggle("hidden");
+        const container = layout.querySelector(".master-classes-container");
+        Object.keys(data.masterClasses).forEach((day) => {
+          data.masterClasses[day].forEach((cls) => {
+            const slot = document.createElement("div");
+            slot.classList.add("master-slot");
+            slot.innerHTML = `
+              <p><span class="label">Class:</span> ${cls.className}</p>
+              <p><span class="label">Time:</span> ${day}, ${cls.startHour} - ${cls.endHour}</p>
+              <p><span class="label">Room:</span> ${cls.room}</p>
+            `;
+            container.appendChild(slot);
           });
         });
-
-        function paintCell(day, hour, minute, color, label = "") {
-          const row = hourMap[hour];
-          const col = dayMap[day];
-          if (!row || !col) return;
-          const index = 6 + (row - 1) * 6 + col;
-          const cell = cells[index];
-          if (cell) {
-            cell.style.backgroundColor = color;
-            cell.textContent = "";
-            cell.title = `${label}${hour}:${minute.toString().padStart(2, "0")} - ${day}`;
-          }
-        }
-
-        data.privateGrid?.forEach(cls => paintCell(cls.day, cls.hour, cls.minute, "var(--yellow)", ""));
-        data.groupGrid?.forEach(cls => paintCell(cls.day, cls.hour, cls.minute, "var(--green)", ""));
-
-      } catch (error) {
-        console.error("Error:", error);
-        alert("Error retrieving schedule. Please try again.");
-      } finally {
-        loader.classList.add("hidden");
       }
-    });
-  });
 
+      // --- GRID PAINTING ---
+      function paintCell(day, hour, type) {
+        const row = hourMap[hour];
+        const col = dayMap[day.charAt(0).toUpperCase() + day.slice(1)];
+        if (!row || !col) return;
+        const index = 6 + (row - 1) * 6 + col;
+        const cell = cells[index];
+        if (cell) {
+          if (type === "gr") cell.style.backgroundColor = "var(--green)";
+          if (type === "pr") cell.style.backgroundColor = "var(--yellow)";
+          if (type === "mc") cell.style.backgroundColor = "var(--blue)";
+        }
+      }
+
+      Object.keys(data.grid).forEach((hour) => {
+        const slots = data.grid[hour];
+        Object.keys(slots).forEach((day) => {
+          paintCell(day, hour, slots[day].type);
+        });
+      });
+    } catch (error) {
+      console.error("Error:", error);
+      alert("Error retrieving schedule. Please try again.");
+    } finally {
+      loader.classList.add("hidden");
+    }
+  });
+});
