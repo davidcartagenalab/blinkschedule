@@ -23,24 +23,19 @@
           </form>
         </header>
 
-        <section class="info-box hidden">
+        <section class="info-box">
           <h2>Group Classes</h2>
           <hr>
-          <p><strong>Name:</strong> <span class="group-name"></span></p>
-          <p><strong>Level:</strong> <span class="group-level"></span></p>
-          <p><strong>Group:</strong> <span class="group-group"></span></p>
-          <p><strong>Schedule:</strong> <span class="group-schedule"></span></p>
-          <p><strong>Location:</strong> <span class="group-location"></span></p>
-          <p><strong>Professor:</strong> <span class="group-teacher"></span></p>
-          <button class="map-btn" style="display: none;">View Map</button>
+          <div class="group-classes-container">
+            <!-- Aquí se insertarán los bloques de clases grupales -->
 
-          <!-- NUEVO: contenedor del mapa -->
+          <button class="map-btn" style="display: none;">View Map</button>
           <div class="group-map hidden">
             <img src="" alt="Group map" id="group-map-img" style="max-width: 100%; margin-top: 1rem;" />
           </div>
         </section>
 
-        <section class="info-box hidden">
+        <section class="info-box">
           <h2>Private Classes</h2>
           <hr>
           <div class="private-classes-container">
@@ -48,7 +43,7 @@
           </div>
         </section>
 
-        <section class="info-box hidden">
+        <section class="info-box">
           <h2>Master Classes</h2>
           <hr>
           <div class="master-classes-container">
