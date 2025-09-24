@@ -18,6 +18,22 @@
   --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
+.dot.master {
+  background: var(--blue);
+}
+
+.private-slot,
+.master-slot {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.75rem;
+  background: #fafafa;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+
 .hidden {
   display: none !important;
 }
@@ -430,5 +446,10 @@ button {
 
   .main-layout {
     padding-bottom: 2rem;
+
+  .private-slot,
+  .master-slot {
+    font-size: 0.85rem;
+    padding: 0.6rem;
   }
 }
