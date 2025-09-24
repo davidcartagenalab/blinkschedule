@@ -47,11 +47,12 @@ document.addEventListener("DOMContentLoaded", () => {
     try {
       // Fetch with Post
       const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email })
-      });
-      const data = await response.json();
+  method: "POST",
+  headers: { "Content-Type": "application/x-www-form-urlencoded" },
+  body: `email=${encodeURIComponent(email)}`
+});
+const data = await response.json();
+
 
 
 
