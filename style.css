@@ -18,40 +18,90 @@
   --box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
-.dot.master {
-  background: var(--blue);
-}
-
-.private-slot,
-.master-slot {
-  border: 1px solid #ddd;
-  border-radius: 6px;
-  padding: 0.75rem 1rem;
-  margin-bottom: 0.75rem;
-  background: #fafafa;
-  font-size: 0.9rem;
-  line-height: 1.4;
-}
-
-
 .hidden {
   display: none !important;
 }
 
 body {
-  margin-top: 1rem;
   background-color: white;
   color: var(--text);
   font-family: var(--font);
   padding: 0 1rem;
+  margin: 0;
+  padding-top: 110px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  padding-bottom: 4rem;
 }
 
 h1 {
   text-align: center;
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
+h2 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+}
+
+hr {
+  margin: 0.25rem 0;
+}
+
+p {
+  font-size: 16px;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+/* === Custom Info Box Structure === */
+
+.info-box {
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: var(--box-shadow);
+  width: 100%;
+  max-width: 600px;
+  background-color: #fff;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
+.info-box p {
+  all: unset;
+  display: block;
+  font-family: var(--font);
+  font-weight: 400 !important;
+  font-size: 1rem;
+  line-height: 1.4;
+  margin-bottom: 0.25rem;
+}
+
+.info-box .label {
+  font-weight: 700 !important;
+  margin-right: 0.25rem;
+  display: inline-block;
+  color: var(--text) !important;
+  opacity: 1 !important;
+}
+
+.info-box .value {
+  font-weight: 400 !important;
+  color: var(--text);
+}
+
+.private-classes-container .private-slot {
+  margin-bottom: 1.5rem;
+}
+
+/* === Layout === */
 .main-layout {
   display: flex;
+  flex-direction: row;
   gap: 2rem;
   max-width: 1200px;
   margin: 0 auto;
@@ -78,9 +128,6 @@ h1 {
   justify-content: center;
   margin-top: 1rem;
   padding: 0 1rem;
-  box-sizing: border-box;
-  flex-shrink: 0;
-  z-index: 1;
 }
 
 .email-form {
@@ -108,12 +155,14 @@ h1 {
   font-weight: 700;
   cursor: pointer;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transition: background-color 0.2s ease;
   height: 44px;
 }
 
-.email-form button:hover {
+
+.email-form button:hover,
+.map-btn:hover {
   background-color: #e69500;
 }
 
@@ -126,28 +175,9 @@ h1 {
   font-weight: 700;
   cursor: pointer;
   font-size: 1rem;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.15);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
   transition: background-color 0.2s ease;
   margin-top: 0.5rem;
-}
-
-.map-btn:hover {
-  background-color: #e69500;
-}
-
-.info-box {
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  padding: 1.5rem;
-  border-radius: 10px;
-  line-height: 1;
-  box-shadow: var(--box-shadow);
-  width: 100%;
-  max-width: 600px;
-
-  word-wrap: break-word;
-  word-break: break-word;
-  overflow-wrap: break-word;
-  white-space: normal;
 }
 
 .grid-container {
@@ -190,17 +220,10 @@ h1 {
   text-transform: uppercase;
   font-size: 0.65rem;
   letter-spacing: 0.4px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   padding: 2px;
-  border-radius: 6px;
   color: black;
 }
 
-.dot.master {
-  background: var(--blue);
-}
 
 
 .cell.header-time {
@@ -229,7 +252,8 @@ h1 {
 }
 
 .cell.group,
-.cell.private {
+.cell.private,
+.cell.master {
   background: #f9f9f9;
 }
 
@@ -261,6 +285,10 @@ h1 {
   background: var(--yellow);
 }
 
+.dot.master {
+  background: var(--blue);
+}
+
 .loader {
   margin-top: 1rem;
   border: 4px solid #eee;
@@ -290,7 +318,23 @@ h1 {
   }
 }
 
+/* ===== Responsive Adjustments ===== */
+
 @media (max-width: 480px) {
+
+  h1 {
+    font-size: 1.5rem !important;
+    line-height: 1.2 !important;
+    margin-top: 0 !important;
+    display: block !important;
+  }
+
+  .top-header {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+  }
+
+
   .main-layout {
     flex-direction: column;
     align-items: stretch;
@@ -309,30 +353,52 @@ h1 {
     margin: 0 auto;
   }
 
-  .top-header {
-    padding:0;
-  }
 
   .email-form {
     flex-direction: column;
     gap: 0.5rem;
   }
 
-  .email-form input[type="email"] {
-    width: 100%;
-    font-size: 1rem;
-  }
-
+  .email-form input[type="email"],
   .email-form button {
     width: 100%;
-    font-size: 1rem;
-    height: 44px;
+    font-size: 1rem !important;
+    padding: 0.6rem 1rem !important;
   }
 
   .legend {
     flex-direction: column;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .grid-container {
+    min-height: 400px;
+    overflow: hidden;
+  }
+
+  .cell,
+  .cell.header-day,
+  .cell.header-time {
+    font-size: 0.75rem;
+  }
+
+  .main-layout {
+    padding-bottom: 2rem;
+  }
+
+  .page-wrapper {
+    padding: 40px 0 0 0 !important;
+  }
+
+  .page-wrapper h1 {
+    display: block !important;
+    font-size: 1.5rem !important;
+    margin: 0 0 1rem 0 !important;
+    color: black !important;
+    text-align: center !important;
+    position: relative !important;
+    z-index: 1 !important;
   }
 }
 
@@ -360,16 +426,12 @@ h1 {
     gap: 0.75rem;
   }
 
-  .email-form input[type="email"] {
+  .email-form input[type="email"],
+  .email-form button {
     width: 100%;
     font-size: 1rem;
   }
 
-  .email-form button {
-    width: 100%;
-    font-size: 1rem;
-    height: 44px;
-  }
 
   .legend {
     flex-wrap: wrap;
@@ -403,10 +465,7 @@ h1 {
     gap: 1rem;
   }
 
-  .email-form input[type="email"] {
-    font-size: 1rem;
-  }
-
+  .email-form input[type="email"],
   .email-form button {
     font-size: 1rem;
     height: 44px;
@@ -418,38 +477,4 @@ h1 {
   }
 }
 
-/* Evita scroll interno global */
-html, body {
-  overflow-x: hidden;
-  overflow-y: auto;
-  padding-bottom: 2rem;
-}
-
-/* Ajusta campos de formulario para móviles y evita zoom */
-input[type="email"],
-button {
-  font-size: 16px;
-}
-
-/* Aumenta legibilidad en móviles */
-@media (max-width: 480px) {
-  .grid-container {
-    min-height: 400px;
-    overflow: hidden;
-  }
-
-  .cell,
-  .cell.header-day,
-  .cell.header-time {
-    font-size: 0.75rem;
-  }
-
-  .main-layout {
-    padding-bottom: 2rem;
-
-  .private-slot,
-  .master-slot {
-    font-size: 0.85rem;
-    padding: 0.6rem;
-  }
-}
+/* End of CSS */
