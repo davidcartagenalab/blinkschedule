@@ -1,144 +1,98 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const layout = document.querySelector(".main-layout");
-  if (!layout) return;
+<!DOCTYPE html>
+<html lang="es">
 
-  const form = layout.querySelector(".email-form");
-  if (!form) return;
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Horarios Estudiantiles</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
 
-  const input = form.querySelector("input[type='email']");
-  const groupBox = layout.querySelectorAll(".info-box")[0];
-  const privateBox = layout.querySelectorAll(".info-box")[1];
-  const masterBox = layout.querySelectorAll(".info-box")[2];
-  const cells = layout.querySelectorAll(".grid-container .cell");
-  const loader = form.querySelector(".loader");
+<body>
+  <h1>Check your schedule</h1>
+  <div class="page-wrapper">
+    <div class="main-layout">
 
-  const SCRIPT_URL = "https://backendblinkschedule.onrender.com/proxy";
-  const hourMap = { "7": 1, "8": 2, "9": 3, "10": 4, "11": 5, "12": 6, "13": 7, "14": 8, "15": 9, "16": 10, "17": 11, "18": 12, "19": 13 };
-  const dayMap = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5 };
+      <div class="left-column">
+        <header class="top-header">
+          <form class="email-form">
+            <input type="email" placeholder="Write your email here">
+            <button type="submit">Check</button>
+            <div class="loader hidden"></div>
+          </form>
+        </header>
+        
+        <section class="info-box hidden">
+          <h2>Personal information</h2>
+          <hr>
+          <div class="personal-info-container"></div>
+        </section>
 
-  // --- Unified rendering function ---
-  function renderClasses(containerSelector, classesByDay, type) {
-    const container = layout.querySelector(containerSelector);
-    container.innerHTML = "";
+        <section class="info-box hidden">
+          <h2>Groups</h2>
+          <hr>
+          <div class="group-classes-container"></div>
+        </section>
 
-    Object.keys(classesByDay).forEach(day => {
-      classesByDay[day].forEach(cls => {
-        const slot = document.createElement("div");
-        slot.classList.add(`${type}-slot`);
+        <section class="info-box hidden">
+          <h2>Privates</h2>
+          <hr>
+          <div class="private-classes-container"></div>
+        </section>
 
-        if (type === "group") {
-          slot.innerHTML = `
-            <p><span class="label">Day:</span> ${day}</p>
-            <p><span class="label">Time:</span> ${cls.startHour} - ${cls.endHour}</p>
-            <p><span class="label">Room:</span> ${cls.room}</p>
-            <p><span class="label">Professor:</span> ${cls.teacher}</p>
-          `;
-        }
+        <section class="info-box hidden">
+          <h2>Master Classes</h2>
+          <hr>
+          <div class="master-classes-container"></div>
+        </section>
 
-        if (type === "private") {
-          slot.innerHTML = `
-            <p><span class="label">Day:</span> ${day}</p>
-            <p><span class="label">Time:</span> ${cls.startHour} - ${cls.endHour}</p>
-            <p><span class="label">Room:</span> ${cls.room}</p>
-            <p><span class="label">Professor:</span> ${cls.teacher}</p>
-          `;
-        }
+      </div>
 
-        if (type === "master") {
-          slot.innerHTML = `
-            <p><span class="label">Class:</span> ${cls.className}</p>
-            <p><span class="label">Day & Time:</span> ${day}, ${cls.startHour} - ${cls.endHour}</p>
-            <p><span class="label">Room:</span> ${cls.room}</p>
-          `;
-        }
+      <div class="right-column">
+        <div class="legend">
+          <span>
+            <div class="dot group"></div>Groups
+          </span>
+          <span>
+            <div class="dot private"></div>Privates
+          </span>
+          <span>
+            <div class="dot master"></div>Master classes
+          </span>
+        </div>
 
-        container.appendChild(slot);
-      });
-    });
-  }
+        <div class="grid-container">
+          <div class="cell reloj"><img src="reloj.png" alt="Reloj"></div>
+          <div class="cell header-day">Monday</div>
+          <div class="cell header-day">Tuesday</div>
+          <div class="cell header-day">Wednesday</div>
+          <div class="cell header-day">Thursday</div>
+          <div class="cell header-day">Friday</div>
 
-  // --- Paint grid function ---
-  function paintCell(day, hour, type) {
-    const row = hourMap[hour];
-    const col = dayMap[day.toLowerCase()];
-    if (!row || !col) return;
-    const index = 6 + (row - 1) * 6 + col;
-    const cell = cells[index];
-    if (cell) {
-      if (type === "gr") cell.style.backgroundColor = "var(--green)";
-      if (type === "pr") cell.style.backgroundColor = "var(--yellow)";
-      if (type === "mc") cell.style.backgroundColor = "var(--blue)";
-    }
-  }
+          <script>
+            const container = document.currentScript.parentElement;
+            const horas = [
+              '7:00 a.m.', '8:00 a.m.', '9:00 a.m.', '10:00 a.m.', '11:00 a.m.', '12:00 p.m.',
+              '1:00 p.m.', '2:00 p.m.', '3:00 p.m.', '4:00 p.m.', '5:00 p.m.', '6:00 p.m.', '7:00 p.m.'
+            ];
 
-  // --- Form submit ---
-  form.addEventListener("submit", async (e) => {
-    e.preventDefault();
-    const email = input.value.trim().toLowerCase();
-    if (!email) return alert("Please enter your email.");
+            for (let i = 0; i < horas.length; i++) {
+              container.innerHTML += `
+                <div class="cell header-time">${horas[i]}</div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>
+                <div class="cell"></div>`;
+            }
+          </script>
+        </div>
+      </div>
 
-    loader.classList.remove("hidden");
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
 
-    try {
-      const response = await fetch(SCRIPT_URL, {
-        method: "POST",
-        headers: { "Content-Type": "application/x-www-form-urlencoded" },
-        body: `email=${encodeURIComponent(email)}`
-      });
-
-      const text = await response.text();
-      const data = JSON.parse(text);
-
-      if (data.error) return alert("We couldn't find your schedule. Please check your email.");
-
-      // Reset boxes
-      groupBox.classList.add("hidden");
-      privateBox.classList.add("hidden");
-      masterBox.classList.add("hidden");
-
-      // Clear grid
-      cells.forEach(cell => {
-        if (!cell.classList.contains("header-day") && !cell.classList.contains("header-time") && !cell.classList.contains("reloj")) {
-          cell.style.backgroundColor = "";
-          cell.textContent = "";
-          cell.title = "";
-        }
-      });
-
-      // --- GROUP CLASSES ---
-      if (data.hasGroup && data.groupClasses) {
-        groupBox.classList.remove("hidden");
-        groupBox.classList.add("fade-in");
-        renderClasses(".group-classes-container", data.groupClasses, "group");
-      }
-
-      // --- PRIVATE CLASSES ---
-      if (data.hasPrivate && data.privateClasses) {
-        privateBox.classList.remove("hidden");
-        privateBox.classList.add("fade-in");
-        renderClasses(".private-classes-container", data.privateClasses, "private");
-      }
-
-      // --- MASTER CLASSES ---
-      if (data.hasMaster && data.masterClasses) {
-        masterBox.classList.remove("hidden");
-        masterBox.classList.add("fade-in");
-        renderClasses(".master-classes-container", data.masterClasses, "master");
-      }
-
-      // --- GRID ---
-      Object.keys(data.grid).forEach(hour => {
-        const slots = data.grid[hour];
-        Object.keys(slots).forEach(day => {
-          paintCell(day, hour, slots[day].type);
-        });
-      });
-
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Error retrieving schedule. Please try again.");
-    } finally {
-      loader.classList.add("hidden");
-    }
-  });
-});
+</html>
