@@ -22,38 +22,46 @@
             <div class="loader hidden"></div>
           </form>
         </header>
-
-        <section class="info-box">
-          <h2>Group Classes</h2>
+        
+        <section class="info-box hidden">
+          <h2>Personal information</h2>
           <hr>
-          <div class="group-classes-container">
-            <!-- Aquí se insertarán los bloques de clases grupales -->
-
-          <button class="map-btn" style="display: none;">View Map</button>
-          <div class="group-map hidden">
-            <img src="" alt="Group map" id="group-map-img" style="max-width: 100%; margin-top: 1rem;" />
-          </div>
+          <div class="personal-info-container"></div>
         </section>
 
-        <section class="info-box">
-          <h2>Private Classes</h2>
+        <section class="info-box hidden">
+          <h2>Groups</h2>
           <hr>
-          <div class="private-classes-container">
-            <!-- Aquí se insertarán los bloques de clases privadas -->
-          </div>
+          <div class="group-classes-container"></div>
         </section>
 
-        <section class="info-box">
+        <section class="info-box hidden">
+          <h2>Privates</h2>
+          <hr>
+          <div class="private-classes-container"></div>
+        </section>
+
+        <section class="info-box hidden">
           <h2>Master Classes</h2>
           <hr>
-          <div class="master-classes-container">
-            <!-- Master classes will be inserted here -->
-          </div>
+          <div class="master-classes-container"></div>
         </section>
 
       </div>
 
       <div class="right-column">
+        <div class="legend">
+          <span>
+            <div class="dot group"></div>Groups
+          </span>
+          <span>
+            <div class="dot private"></div>Privates
+          </span>
+          <span>
+            <div class="dot master"></div>Master classes
+          </span>
+        </div>
+
         <div class="grid-container">
           <div class="cell reloj"><img src="reloj.png" alt="Reloj"></div>
           <div class="cell header-day">Monday</div>
@@ -80,19 +88,6 @@
             }
           </script>
         </div>
-
-        <div class="legend">
-          <span>
-            <div class="dot group"></div>Group class
-          </span>
-          <span>
-            <div class="dot private"></div>Private class
-          </span>
-          <span>
-            <div class="dot master"></div>Master class
-          </span>
-        </div>
-
       </div>
 
     </div>
